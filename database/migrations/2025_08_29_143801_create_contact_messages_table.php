@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('contact_messages', function (Blueprint $table) {
             $table->id();
+            $table->string('name', 100);
+            $table->string('email', 120);
+            $table->string('subject', 150)->nullable();
+            $table->text('message');
+            $table->enum('status', ['new', 'read', 'archived'])->default('new');
             $table->timestamps();
         });
     }
