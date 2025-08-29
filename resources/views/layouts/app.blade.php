@@ -26,7 +26,17 @@
         body {
             background-color: var(--bg-primary);
             color: var(--text-primary);
+            overflow-x: hidden; /* Pastikan body tidak bisa scroll horizontal */
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        /* Container utama untuk mencegah overflow */
+        .main-container {
+            width: 100%;
             overflow-x: hidden;
+            position: relative;
         }
 
         .bg-primary {
@@ -59,6 +69,36 @@
 
         .bg-accent-secondary {
             background-color: var(--accent-secondary);
+        }
+
+        /* Navigation Styles - FIXED */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: var(--bg-secondary);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .nav-container {
+                padding: 0 1.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .nav-container {
+                padding: 0 2rem;
+            }
         }
 
         /* Mobile Navigation Styles */
@@ -149,6 +189,13 @@
             .testimonial-grid {
                 grid-template-columns: 1fr;
             }
+
+            /* Mobile nav items */
+            #mobile-menu a {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
         }
 
         @media (min-width: 769px) and (max-width: 1024px) {
@@ -160,122 +207,135 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+
+        /* Prevent horizontal scrolling */
+        .max-w-screen {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+
+        /* Main content spacing */
+        main {
+            padding-top: 4rem; /* Sesuaikan dengan tinggi navbar */
+            width: 100%;
+            overflow-x: hidden;
+        }
     </style>
 </head>
 
 <body class="bg-primary text-primary">
-    <!-- Navigation -->
-    <nav class="bg-secondary shadow-lg fixed w-full top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="flex items-center space-x-2">
-                        <img src="/images/logo-sekolah.png" alt="Logo SMK" class="h-10 w-10">
-                        <span class="font-bold text-lg text-primary">SMK Telesandi</span>
-                    </a>
-                </div>
-
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="{{ route('home') }}"
-                        class="nav-link {{ request()->routeIs('home') ? 'accent-primary' : 'text-secondary' }} hover:accent-primary transition-colors">Beranda</a>
-                    <a href="{{ route('about') }}"
-                        class="nav-link {{ request()->routeIs('about') ? 'accent-primary' : 'text-secondary' }} hover:accent-primary transition-colors">Tentang
-                        Kami</a>
-                    <a href="{{ route('activities') }}"
-                        class="nav-link {{ request()->routeIs('activities*') ? 'accent-primary' : 'text-secondary' }} hover:accent-primary transition-colors">Kegiatan</a>
-                    <a href="{{ route('news') }}"
-                        class="nav-link {{ request()->routeIs('news*') ? 'accent-primary' : 'text-secondary' }} hover:accent-primary transition-colors">Berita</a>
-                    <a href="{{ route('contact') }}"
-                        class="nav-link {{ request()->routeIs('contact') ? 'accent-primary' : 'text-secondary' }} hover:accent-primary transition-colors">Kontak</a>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-btn" class="text-secondary hover:accent-primary focus:outline-none">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Menu Overlay -->
-        <div id="mobile-menu-overlay"></div>
-
-        <!-- Mobile Menu Sidebar -->
-        <div id="mobile-menu" class="md:hidden">
-            <button class="close-menu" id="close-menu-btn">
-                &times;
-            </button>
-            <div class="px-6 pt-16 pb-8 space-y-6">
-                <a href="{{ route('home') }}"
-                    class="block px-3 py-3 text-lg text-secondary hover:accent-primary hover:bg-gray-800 rounded-lg transition-colors {{ request()->routeIs('home') ? 'accent-primary bg-gray-800' : '' }}">Beranda</a>
-                <a href="{{ route('about') }}"
-                    class="block px-3 py-3 text-lg text-secondary hover:accent-primary hover:bg-gray-800 rounded-lg transition-colors {{ request()->routeIs('about') ? 'accent-primary bg-gray-800' : '' }}">Tentang
-                    Kami</a>
-                <a href="{{ route('activities') }}"
-                    class="block px-3 py-3 text-lg text-secondary hover:accent-primary hover:bg-gray-800 rounded-lg transition-colors {{ request()->routeIs('activities*') ? 'accent-primary bg-gray-800' : '' }}">Kegiatan</a>
-                <a href="{{ route('news') }}"
-                    class="block px-3 py-3 text-lg text-secondary hover:accent-primary hover:bg-gray-800 rounded-lg transition-colors {{ request()->routeIs('news*') ? 'accent-primary bg-gray-800' : '' }}">Berita</a>
-                <a href="{{ route('contact') }}"
-                    class="block px-3 py-3 text-lg text-secondary hover:accent-primary hover:bg-gray-800 rounded-lg transition-colors {{ request()->routeIs('contact') ? 'accent-primary bg-gray-800' : '' }}">Kontak</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="pt-16">
-        @yield('content')
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-secondary mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 footer-grid">
-                <div class="col-span-1 md:col-span-2">
-                    <div class="flex items-center space-x-2 mb-4">
-                        <img src="/images/logo-sekolah.png" alt="Logo SMK" class="h-12 w-12">
-                        <div>
-                            <h3 class="font-bold text-lg text-primary">SMK Telekomunikasi Telesandi Bekasi</h3>
-                            <p class="text-secondary text-sm">Membangun Generasi Unggul di Bidang Telekomunikasi</p>
-                        </div>
+    <div class="main-container max-w-screen">
+        <!-- Navigation -->
+        <nav>
+            <div class="nav-container">
+                <div class="flex justify-between h-16 items-center">
+                    <div class="flex items-center">
+                        <a href="{{ route('home') }}" class="flex items-center space-x-2">
+                            <img src="/images/logo-sekolah.png" alt="Logo SMK" class="h-10 w-10">
+                            <span class="font-bold text-lg text-primary">SMK Telesandi</span>
+                        </a>
                     </div>
-                    <p class="text-secondary mb-4">Sekolah menengah kejuruan yang fokus pada pengembangan keahlian di
-                        bidang telekomunikasi dan teknologi informasi.</p>
-                </div>
 
-                <div>
-                    <h4 class="font-semibold text-primary mb-4">Menu Utama</h4>
-                    <ul class="space-y-2">
-                        <li><a href="{{ route('home') }}" class="text-secondary hover:accent-primary">Beranda</a></li>
-                        <li><a href="{{ route('about') }}" class="text-secondary hover:accent-primary">Tentang Kami</a>
-                        </li>
-                        <li><a href="{{ route('activities') }}" class="text-secondary hover:accent-primary">Kegiatan</a>
-                        </li>
-                        <li><a href="{{ route('news') }}" class="text-secondary hover:accent-primary">Berita</a></li>
-                    </ul>
-                </div>
+                    <!-- Desktop Menu -->
+                    <div class="hidden md:flex items-center space-x-4 lg:space-x-6">
+                        <a href="{{ route('home') }}"
+                            class="nav-link {{ request()->routeIs('home') ? 'accent-primary' : 'text-secondary' }} hover:accent-primary transition-colors whitespace-nowrap">Beranda</a>
+                        <a href="{{ route('about') }}"
+                            class="nav-link {{ request()->routeIs('about') ? 'accent-primary' : 'text-secondary' }} hover:accent-primary transition-colors whitespace-nowrap">Tentang Kami</a>
+                        <a href="{{ route('activities') }}"
+                            class="nav-link {{ request()->routeIs('activities*') ? 'accent-primary' : 'text-secondary' }} hover:accent-primary transition-colors whitespace-nowrap">Kegiatan</a>
+                        <a href="{{ route('news') }}"
+                            class="nav-link {{ request()->routeIs('news*') ? 'accent-primary' : 'text-secondary' }} hover:accent-primary transition-colors whitespace-nowrap">Berita</a>
+                        <a href="{{ route('contact') }}"
+                            class="nav-link {{ request()->routeIs('contact') ? 'accent-primary' : 'text-secondary' }} hover:accent-primary transition-colors whitespace-nowrap">Kontak</a>
+                    </div>
 
-                <div>
-                    <h4 class="font-semibold text-primary mb-4">Kontak</h4>
-                    <ul class="space-y-2 text-secondary">
-                        <li>Jl. Raya Bekasi No. 123</li>
-                        <li>Bekasi, Jawa Barat</li>
-                        <li>Telp: (021) 123-4567</li>
-                        <li>Email: info@smktelesandi.sch.id</li>
-                    </ul>
+                    <!-- Mobile Menu Button -->
+                    <div class="md:hidden flex items-center">
+                        <button id="mobile-menu-btn" class="text-secondary hover:accent-primary focus:outline-none">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
-                <p class="text-secondary">&copy; {{ date('Y') }} SMK Telekomunikasi Telesandi Bekasi. All rights
-                    reserved.</p>
+            <!-- Mobile Menu Overlay -->
+            <div id="mobile-menu-overlay"></div>
+
+            <!-- Mobile Menu Sidebar -->
+            <div id="mobile-menu" class="md:hidden">
+                <button class="close-menu" id="close-menu-btn">
+                    &times;
+                </button>
+                <div class="px-6 pt-16 pb-8 space-y-4">
+                    <a href="{{ route('home') }}"
+                        class="block px-3 py-3 text-lg text-secondary hover:accent-primary hover:bg-gray-800 rounded-lg transition-colors {{ request()->routeIs('home') ? 'accent-primary bg-gray-800' : '' }} whitespace-nowrap overflow-hidden text-ellipsis">Beranda</a>
+                    <a href="{{ route('about') }}"
+                        class="block px-3 py-3 text-lg text-secondary hover:accent-primary hover:bg-gray-800 rounded-lg transition-colors {{ request()->routeIs('about') ? 'accent-primary bg-gray-800' : '' }} whitespace-nowrap overflow-hidden text-ellipsis">Tentang Kami</a>
+                    <a href="{{ route('activities') }}"
+                        class="block px-3 py-3 text-lg text-secondary hover:accent-primary hover:bg-gray-800 rounded-lg transition-colors {{ request()->routeIs('activities*') ? 'accent-primary bg-gray-800' : '' }} whitespace-nowrap overflow-hidden text-ellipsis">Kegiatan</a>
+                    <a href="{{ route('news') }}"
+                        class="block px-3 py-3 text-lg text-secondary hover:accent-primary hover:bg-gray-800 rounded-lg transition-colors {{ request()->routeIs('news*') ? 'accent-primary bg-gray-800' : '' }} whitespace-nowrap overflow-hidden text-ellipsis">Berita</a>
+                    <a href="{{ route('contact') }}"
+                        class="block px-3 py-3 text-lg text-secondary hover:accent-primary hover:bg-gray-800 rounded-lg transition-colors {{ request()->routeIs('contact') ? 'accent-primary bg-gray-800' : '' }} whitespace-nowrap overflow-hidden text-ellipsis">Kontak</a>
+                </div>
             </div>
-        </div>
-    </footer>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="pt-16">
+            @yield('content')
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-secondary mt-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 footer-grid">
+                    <div class="col-span-1 md:col-span-2">
+                        <div class="flex items-center space-x-2 mb-4">
+                            <img src="/images/logo-sekolah.png" alt="Logo SMK" class="h-12 w-12">
+                            <div>
+                                <h3 class="font-bold text-lg text-primary">SMK Telekomunikasi Telesandi Bekasi</h3>
+                                <p class="text-secondary text-sm">Membangun Generasi Unggul di Bidang Telekomunikasi</p>
+                            </div>
+                        </div>
+                        <p class="text-secondary mb-4">Sekolah menengah kejuruan yang fokus pada pengembangan keahlian di
+                            bidang telekomunikasi dan teknologi informasi.</p>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-primary mb-4">Menu Utama</h4>
+                        <ul class="space-y-2">
+                            <li><a href="{{ route('home') }}" class="text-secondary hover:accent-primary">Beranda</a></li>
+                            <li><a href="{{ route('about') }}" class="text-secondary hover:accent-primary">Tentang Kami</a>
+                            </li>
+                            <li><a href="{{ route('activities') }}" class="text-secondary hover:accent-primary">Kegiatan</a>
+                            </li>
+                            <li><a href="{{ route('news') }}" class="text-secondary hover:accent-primary">Berita</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-primary mb-4">Kontak</h4>
+                        <ul class="space-y-2 text-secondary">
+                            <li>Jl. Raya Bekasi No. 123</li>
+                            <li>Bekasi, Jawa Barat</li>
+                            <li>Telp: (021) 123-4567</li>
+                            <li>Email: info@smktelesandi.sch.id</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                    <p class="text-secondary">&copy; {{ date('Y') }} SMK Telekomunikasi Telesandi Bekasi. All rights
+                        reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
