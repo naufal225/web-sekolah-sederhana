@@ -132,7 +132,7 @@ $(document).ready(() => {
 
         const params = {
             page: currentPage,
-            filter: currentFilter,
+            category: currentFilter,
         };
 
         axios

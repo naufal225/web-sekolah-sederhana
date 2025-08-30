@@ -17,7 +17,7 @@ class ActivityController extends Controller
     {
         $query = Activity::latest();
 
-        if ($request->has('category') && !empty($request->category)) {
+        if ($request->has('category') && !empty($request->category) && $request->category !== "all") {
             $query->byCategory($request->category);
         }
 
